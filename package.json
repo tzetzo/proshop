@@ -1,0 +1,34 @@
+{
+  "name": "proshop",
+  "version": "2.0.0",
+  "description": "eCommerce application built with the MERN stack",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "server": "nodemon backend/server.js",
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\"  \"npm run client\"",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend",
+    "data:seed": "node backend/seeder.js",
+    "data:destroy": "node backend/seeder.js -d"
+  },
+  "author": "Tzvetan Marinov",
+  "license": "MIT",
+  "dependencies": {
+    "base64-arraybuffer": "^1.0.2",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "express-validator": "^7.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.2",
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "dotenv": "^16.4.5",
+    "nodemon": "^3.1.0"
+  }
+}
