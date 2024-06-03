@@ -9,6 +9,7 @@ import {
     getAllOrders,
 } from "../controllers/orderController.js";
 import { auth, admin } from "../middleware/authMiddleware.js";
+import checkObjectId from '../middleware/checkObjectId.js';
 
 const router = Router();
 
@@ -24,11 +25,12 @@ router
 router.route("/myorders").get(auth, getMyOrders);
 
 
-router.route("/:id").get(auth, getOrderById);
+router.route("/:id").get(auth, checkObjectId, getOrderById);
 router
   .route("/:id/pay")
   .put(
     auth,
+    checkObjectId,
     updateOrderToPaid
   );
   router
@@ -36,6 +38,7 @@ router
   .put(
     auth,
     admin,
+    checkObjectId,
     updateOrderToDelivered
   );
 

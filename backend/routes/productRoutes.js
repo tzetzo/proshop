@@ -11,6 +11,7 @@ import {
   getTopProducts,
 } from "../controllers/productController.js";
 import { auth, admin } from "../middleware/authMiddleware.js";
+import checkObjectId from '../middleware/checkObjectId.js';
 
 const router = Router();
 
@@ -22,9 +23,9 @@ router.route("/top").get(getTopProducts);
 
 router
   .route("/:id")
-  .get(getProductById)
-  .put(auth, admin, updateProduct)
-  .delete(auth, admin, deleteProduct);
+  .get(checkObjectId, getProductById)
+  .put(auth, admin, checkObjectId, updateProduct)
+  .delete(auth, admin, checkObjectId, deleteProduct);
 
 router.route("/:id/reviews").post(
   auth, // validate the rating and comment
@@ -32,6 +33,7 @@ router.route("/:id/reviews").post(
     check("rating", "Please choose a rating between 1 and 5").isIn([1,2,3,4,5]),
     check("comment", "Please write a comment of min 30 characters").isLength({ min: 30 }),
   ],
+  checkObjectId,
   createProductReview
 );
 

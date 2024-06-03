@@ -5,7 +5,7 @@ import { FaShoppingCart, FaUser } from "react-icons/fa";
 import { LinkContainer } from "react-router-bootstrap";
 
 import logo from "../assets/logo.png";
-import { useLogoutMutation, removeCredentials, clearCart } from "../store";
+import { useLogoutMutation, removeCredentials, resetCart } from "../store";
 import SearchBox from "./SearchBox";
 
 const Header = () => {
@@ -23,7 +23,7 @@ const Header = () => {
       // remove the user info from localStorage and the redux store and delete the cookie with the JWT from the browser
       await logout().unwrap();
       dispatch(removeCredentials());
-      dispatch(clearCart());
+      dispatch(resetCart()); 
       navigate("/login");
     } catch (err) {
       console.error(err);

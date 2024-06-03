@@ -25,11 +25,9 @@ const UserUpdateScreen = () => {
   useEffect(() => user && setState(user), [user]);
 
   const submitHandler = async (e) => {
-    console.log(state.isAdmin)
     e.preventDefault();
     try {
       const res = await updateUser({ id, body: state });
-      console.log(res)
       // this handles the case when admin user is attempted for deletion(backend doesnt allow it and returns error)
       if (res.error) return toast.error(res.error.data.errors[0].msg);
       toast.success("User updated");
@@ -52,7 +50,7 @@ const UserUpdateScreen = () => {
         {loadingUser ? (
           <Loader />
         ) : error ? (
-          <Message variant="danger">{error}</Message>
+          <Message variant="danger">{error.data?.message || error.error}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">
@@ -80,7 +78,7 @@ const UserUpdateScreen = () => {
                 type="switch"
                 label="Is Admin"
                 checked={state.isAdmin}
-                onChange={(e) => {console.log(e.target.checked, state.isAdmin); setState({ ...state, isAdmin: e.target.checked })}}
+                onChange={(e) => setState({ ...state, isAdmin: e.target.checked })}
               />
             </Form.Group>
             

@@ -112,12 +112,6 @@ const OrderScreen = () => {
     toast.error(err.message);
   };
 
-  //   async function onApproveTest() { console.log(_id)
-  //     await payOrder({ orderId: _id, orderDetails: { payer: {}, id:'123', email_address: "t@w.nom", update_time: '132443543556', status: 'status' } });
-  //     refetchOrder();
-  //     toast.success("Payment successful");
-  //   };
-
   const deliverOrderHandler = async () => {
     try {
       await deliverOrder(_id).unwrap();
@@ -131,7 +125,7 @@ const OrderScreen = () => {
   return isLoading ? (
     <Loader />
   ) : error ? (
-    <Message variant="danger">{error.data.message}</Message>
+    <Message variant="danger">{error.data?.message || error.error}</Message>
   ) : (
     <>
       <h1>Order {_id}</h1>

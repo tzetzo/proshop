@@ -12,6 +12,7 @@ import {
   deleteUser,
 } from "../controllers/userController.js";
 import { auth, admin } from "../middleware/authMiddleware.js";
+import checkObjectId from '../middleware/checkObjectId.js';
 
 const router = Router();
 
@@ -51,11 +52,12 @@ router
 
 router
   .route("/:id")
-  .get(auth, admin, getUserById)
-  .delete(auth, admin, deleteUser)
+  .get(auth, admin, checkObjectId, getUserById)
+  .delete(auth, admin, checkObjectId, deleteUser)
   .put(
     auth,
     admin,
+    checkObjectId,
     // validate the name, email, password or isAdmin if provided
     [
       check("name", "Name is required").optional().not().isEmpty(),

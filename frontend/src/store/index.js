@@ -57,5 +57,6 @@ export {
   saveShippingAddress,
   savePaymentMethod,
   clearCart,
+  resetCart,
 } from "./slices/cartSlice";
 export { setCredentials, removeCredentials } from "./slices/authSlice";
