@@ -68,6 +68,26 @@ const createOrder = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc Delete order
+// @route DELETE /api/orders/:id
+// @access Private
+const deleteOrder = asyncHandler(async (req, res) => {
+  // the admins can delete any order
+  if(req.user.isAdmin){
+    const deletedOrder = await Order.findByIdAndDelete(req.params.id);
+    res.status(200).json(deletedOrder);
+  }
+  
+  // for regular users they can delete only their orders
+  try {
+    const deletedOrder = await Order.findOneAndDelete({_id: req.params.id, user: req.user._id});
+    if(!deletedOrder) throw new Error("Cannot delete order");
+    res.status(200).json(deletedOrder);
+  } catch (error) {
+    res.status(400).json({message: error.message});
+  }
+});
+
 // @desc Get logged in user orders
 // @route GET /api/orders/myorders
 // @access Private
@@ -155,6 +175,7 @@ const getAllOrders = asyncHandler(async (req, res) => {
 
 export {
   createOrder,
+  deleteOrder,
   getMyOrders,
   getOrderById,
   updateOrderToPaid,

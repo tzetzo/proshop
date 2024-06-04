@@ -2,6 +2,7 @@ import { Router } from "express";
 
 import {
     createOrder,
+    deleteOrder,
     getMyOrders,
     getOrderById,
     updateOrderToPaid,
@@ -25,7 +26,7 @@ router
 router.route("/myorders").get(auth, getMyOrders);
 
 
-router.route("/:id").get(auth, checkObjectId, getOrderById);
+router.route("/:id").get(auth, checkObjectId, getOrderById).delete(auth, checkObjectId, deleteOrder);
 router
   .route("/:id/pay")
   .put(

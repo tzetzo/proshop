@@ -42,6 +42,7 @@ export {
 } from "./apis/usersApi";
 export {
   useCreateOrderMutation,
+  useDeleteOrderMutation,
   useGetOrderByIdQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,

@@ -1,12 +1,32 @@
+import { useState } from "react";
 import { LinkContainer } from "react-router-bootstrap";
-import { Button, Table } from "react-bootstrap";
-import { FaTimes } from "react-icons/fa";
+import { Button, Modal, Table } from "react-bootstrap";
+import { FaTimes, FaTrash } from "react-icons/fa";
+import { toast } from "react-toastify";
+
 import Message from "../../components/Message";
 import Loader from "../../components/Loader";
-import { useGetAllOrdersQuery } from "../../store";
+import { useDeleteOrderMutation, useGetAllOrdersQuery } from "../../store";
 
 const OrderListScreen = () => {
-  const { data: allOrders, isLoading, error } = useGetAllOrdersQuery();
+  const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
+  const [idToDelete, setIdtoDelete] = useState("");
+
+  const { data: allOrders, isLoading, error, refetch: refetchAllOrders } = useGetAllOrdersQuery();
+
+  const [deleteOrder, { isLoading: loadingDeleteOrder }] =
+    useDeleteOrderMutation();
+
+  const deleteOrderHandler = async () => {
+    setToggleDeleteModal(!toggleDeleteModal);
+    try {
+      await deleteOrder(idToDelete);
+      refetchAllOrders();
+      toast.success("Order deleted");
+    } catch (err) {
+      toast.error(err?.data?.message || err.error);
+    }
+  };
 
   return (
     <>
@@ -25,6 +45,7 @@ const OrderListScreen = () => {
               <th>TOTAL</th>
               <th>PAID</th>
               <th>DELIVERED</th>
+              <th></th>
               <th></th>
             </tr>
           </thead>
@@ -56,11 +77,49 @@ const OrderListScreen = () => {
                     </Button>
                   </LinkContainer>
                 </td>
+                <td>
+                  <Button
+                    variant="danger"
+                    className="btn-sm"
+                    onClick={() => {
+                      setIdtoDelete(order._id);
+                      setToggleDeleteModal(!toggleDeleteModal);
+                    }}
+                    disabled={loadingDeleteOrder}
+                  >
+                    <FaTrash />
+                  </Button>
+                </td>
               </tr>
             ))}
           </tbody>
         </Table>
       )}
+      <Modal
+        show={toggleDeleteModal}
+        onHide={() => setToggleDeleteModal(!toggleDeleteModal)}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Delete order</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this order?</Modal.Body>
+        <Modal.Footer>
+          <Button
+            variant="secondary"
+            onClick={() => setToggleDeleteModal(!toggleDeleteModal)}
+            disabled={loadingDeleteOrder}
+          >
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={deleteOrderHandler}
+            disabled={loadingDeleteOrder}
+          >
+            Yes, I am admin and know what I'm doing
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
