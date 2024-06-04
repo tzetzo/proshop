@@ -43,10 +43,6 @@ const PlaceOrderScreen = () => {
         cartItems,
         shippingAddress,
         paymentMethod,
-        itemsPrice,
-        taxPrice,
-        shippingPrice,
-        totalPrice,
       }).unwrap();
       // dispatch(clearCart());
       navigate(`/order/${res._id}`);
