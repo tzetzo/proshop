@@ -1,7 +1,8 @@
 import path from "path";
 import { Router } from "express";
 import multer from "multer";
-import sharp from "sharp";
+import sizeOf from "image-size";
+import fs from "fs";
 
 const router = Router();
 
@@ -15,15 +16,15 @@ function fileFilter(req, file, cb) {
   if (extname && mimetype) {
     cb(null, true);
   } else {
-    cb(new Error('Images only!'), false);
+    cb(new Error("Images only!"), false);
   }
 }
 
 // we want to store the images locally on the server(as opposed to S3)
 const upload = multer({
   storage: multer.diskStorage({
-    destination(req,file,cb){
-        cb(null, 'uploads/')
+    destination(req, file, cb) {
+      cb(null, "uploads/");
     },
     filename(req, file, cb) {
       cb(
@@ -32,19 +33,29 @@ const upload = multer({
       );
     },
   }),
-  fileFilter
+  fileFilter,
 });
 
-const uploadSingleImage = upload.single('image');
+const uploadSingleImage = upload.single("image");
 
-router.post('/', (req, res) => {
+router.post("/", (req, res) => {
   uploadSingleImage(req, res, function (err) {
+    // dont accept uploaded images if not certain dimensions
+    // this way we keep consistent view of our products
+    if (req.file) {
+      const dimensions = sizeOf(req.file.path);
+      if (dimensions.width !== 1200 || dimensions.height !== 600)
+        return fs.unlink(req.file.path, function () {
+          res.status(400).send({ message: "Image should be 1200 X 600" });
+        });
+    }
+
     if (err) {
       return res.status(400).send({ message: err.message });
     }
 
     res.status(200).send({
-      message: 'Image uploaded successfully',
+      message: "Image uploaded successfully",
       image: `/${req.file.path}`,
     });
   });
