@@ -21,7 +21,7 @@ const userSchema = new mongoose.Schema({
         default: false
     },
 }, {
-    timestamps: true,
+    timestamps: true, // adds two properties of type Date to your schema - createdAt & updatedAt
 });
 
 userSchema.methods.matchPassword = async function (enteredPassword) {

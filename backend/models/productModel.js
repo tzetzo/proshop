@@ -70,7 +70,7 @@ const productSchema = new mongoose.Schema({
         default: 0,
     },
 }, {
-    timestamps: true,
+    timestamps: true, // adds two properties of type Date to your schema - createdAt & updatedAt
 });
 
 const Product = mongoose.model('Product', productSchema);

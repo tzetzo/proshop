@@ -4,17 +4,10 @@
 // 3. Copy/Paste the email into the PayPal popup after clicking on the PayPal button - Next
 // 4. Copy/Paste the password into the PayPal popup - Log in
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  ListGroup,
-  Image,
-  Button,
-  Card,
-} from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Button, Card } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 
@@ -25,13 +18,18 @@ import {
   useGetOrderByIdQuery,
   usePayOrderMutation,
   useGetPayPalClientIdQuery,
-  useUpdateOrderToDeliveredMutation
+  useUpdateOrderToDeliveredMutation,
 } from "../store";
 
 const OrderScreen = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
-  const { data = {}, refetch: refetchOrder, isLoading, error } = useGetOrderByIdQuery(id);
+  const {
+    data = {},
+    refetch: refetchOrder,
+    isLoading,
+    error,
+  } = useGetOrderByIdQuery(id);
   const {
     _id = "",
     user = "",
@@ -46,10 +44,18 @@ const OrderScreen = () => {
     shippingPrice = "",
     taxPrice = "",
     totalPrice = "",
+    createdAt = "",
+    expireAt = "",
   } = data;
 
+  const [timeLeftToPay, setTimeLeftToPay] = useState({
+    minutes: -10,
+    seconds: -10,
+  });
+
   const [payOrder, { isLoading: loadingPay }] = usePayOrderMutation();
-  const [deliverOrder, {isLoading: loadingDeliverOrder}] = useUpdateOrderToDeliveredMutation();
+  const [deliverOrder, { isLoading: loadingDeliverOrder }] =
+    useUpdateOrderToDeliveredMutation();
 
   const [{ isPending, options }, paypalDispatch] = usePayPalScriptReducer(); // https://www.npmjs.com/package/@paypal/react-paypal-js
   const {
@@ -58,6 +64,34 @@ const OrderScreen = () => {
     error: errorPayPal,
   } = useGetPayPalClientIdQuery();
   const { userInfo } = useSelector(({ auth }) => auth);
+
+  // Timer for the user to know how much time left he has, to pay
+  useEffect(() => {
+    let interval;
+    if (expireAt) {
+      interval = setInterval(() => {
+        const minutes = Math.floor(
+          (new Date(expireAt) - Date.now()) / 1000 / 60
+        );
+        const seconds = Math.floor(
+          ((new Date(expireAt) - Date.now()) / 1000) % 60
+        );
+
+        setTimeLeftToPay({
+          minutes,
+          seconds,
+        });
+
+        if (minutes < 0 && seconds < 0) {
+          clearInterval(interval);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [expireAt]);
 
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
@@ -79,7 +113,14 @@ const OrderScreen = () => {
         }
       }
     }
-  }, [isPaid, paypal.clientId, paypalDispatch, loadingPayPal, errorPayPal, options]);
+  }, [
+    isPaid,
+    paypal.clientId,
+    paypalDispatch,
+    loadingPayPal,
+    errorPayPal,
+    options,
+  ]);
 
   function createOrder(data, actions) {
     return actions.order
@@ -116,11 +157,21 @@ const OrderScreen = () => {
     try {
       await deliverOrder(_id).unwrap();
       refetchOrder();
-      toast.success('Order delivered')
+      toast.success("Order delivered");
     } catch (err) {
       toast.error(err?.data?.message || err.message);
     }
-  }
+  };
+
+  const minutesToPay = () =>
+    Math.ceil((new Date(expireAt) - new Date(createdAt)) / 1000 / 60);
+
+  const timeLeft = () => {
+    const { minutes, seconds } = timeLeftToPay;
+    return `Time left: ${
+      minutes.toString().length === 1 ? `0` + minutes : minutes
+    } : ${seconds.toString().length === 1 ? `0` + seconds : seconds}`;
+  };
 
   return isLoading ? (
     <Loader />
@@ -129,6 +180,23 @@ const OrderScreen = () => {
   ) : (
     <>
       <h1>Order {_id}</h1>
+
+      <Message>
+        {timeLeftToPay.minutes === -10 &&
+        timeLeftToPay.seconds === -10 ? <Row><Col>Estimating time...</Col></Row> : timeLeftToPay.minutes >= 0 ||
+          timeLeftToPay.seconds >= 0 ? (
+          <Row>
+            <Col md={10}>
+              Unpaid orders are valid for {minutesToPay()} minutes after which
+              will be deleted from our Database.
+            </Col>
+            <Col md={2}>{timeLeft()}</Col>
+          </Row>
+        ) : (
+          <Row><Col>Sorry, the time to pay the order expired!</Col></Row>
+        )}
+      </Message>
+
       <Row>
         <Col md={8}>
           <ListGroup variant="flush">
@@ -223,17 +291,12 @@ const OrderScreen = () => {
                     <Loader />
                   ) : (
                     <div>
-                      {/* <Button
-                        onClick={onApproveTest}
-                        style={{ marginBottom: "10px" }}
-                      >
-                        Test pay order
-                      </Button> */}
                       <div>
                         <PayPalButtons
                           createOrder={createOrder}
                           onApprove={onApprove}
                           onError={onError}
+                          disabled={timeLeftToPay.seconds < 0}
                         />
                       </div>
                     </div>
@@ -242,7 +305,15 @@ const OrderScreen = () => {
               )}
               {loadingDeliverOrder && <Loader />}
               {userInfo?.isAdmin && isPaid && !isDelivered && (
-                <ListGroup.Item><Button type='button' className='btn btn-block' onClick={deliverOrderHandler}>Mark as delivered</Button></ListGroup.Item>
+                <ListGroup.Item>
+                  <Button
+                    type="button"
+                    className="btn btn-block"
+                    onClick={deliverOrderHandler}
+                  >
+                    Mark as delivered
+                  </Button>
+                </ListGroup.Item>
               )}
             </ListGroup>
           </Card>

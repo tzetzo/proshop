@@ -52,6 +52,9 @@ const createOrder = asyncHandler(async (req, res) => {
     taxPrice,
     shippingPrice,
     totalPrice,
+    // delete UNPAID orders 15 minutes after they are created (might need to wait 1 min more to see it deleted in https://cloud.mongodb.com/)
+    // the other part of the implementation is in orderModel.js
+    expireAt: Date.now() + 15 * 60 * 1000 // ( 15 minutes * 60 seconds) * 1000 milliseconds
   });
 
   try {
