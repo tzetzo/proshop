@@ -68,7 +68,7 @@ const OrderScreen = () => {
   // Timer for the user to know how much time left he has, to pay
   useEffect(() => {
     let interval;
-    if (expireAt) {
+    if (expireAt && !isPaid) {
       interval = setInterval(() => {
         const minutes = Math.floor(
           (new Date(expireAt) - Date.now()) / 1000 / 60
@@ -88,10 +88,18 @@ const OrderScreen = () => {
       }, 1000);
     }
 
+    if(isPaid) {
+      clearInterval(interval);
+      setTimeLeftToPay({
+        minutes: -10,
+        seconds: -10,
+      });
+    }
+
     return () => {
       clearInterval(interval);
     };
-  }, [expireAt]);
+  }, [expireAt, isPaid]);
 
   useEffect(() => {
     if (!errorPayPal && !loadingPayPal && paypal.clientId) {
@@ -182,9 +190,11 @@ const OrderScreen = () => {
       <h1>Order {_id}</h1>
 
       <Message>
-        {timeLeftToPay.minutes === -10 &&
-        timeLeftToPay.seconds === -10 ? <Row><Col>Estimating time...</Col></Row> : timeLeftToPay.minutes >= 0 ||
-          timeLeftToPay.seconds >= 0 ? (
+        {(timeLeftToPay.minutes === -10 && !isPaid) ? (
+          <Row>
+            <Col>Estimating time...</Col>
+          </Row>
+        ) : timeLeftToPay.minutes >= 0 || timeLeftToPay.seconds >= 0 ? (
           <Row>
             <Col md={10}>
               Unpaid orders are valid for {minutesToPay()} minutes after which
@@ -192,8 +202,14 @@ const OrderScreen = () => {
             </Col>
             <Col md={2}>{timeLeft()}</Col>
           </Row>
+        ) : isPaid ? (
+          <Row>
+            <Col>Thank you, your order is approved!</Col>
+          </Row>
         ) : (
-          <Row><Col>Sorry, the time to pay the order expired!</Col></Row>
+          <Row>
+            <Col>Sorry, the time to pay the order expired!</Col>
+          </Row>
         )}
       </Message>
 
@@ -296,7 +312,7 @@ const OrderScreen = () => {
                           createOrder={createOrder}
                           onApprove={onApprove}
                           onError={onError}
-                          disabled={timeLeftToPay.seconds < 0}
+                          disabled={timeLeftToPay.minutes < 0}
                         />
                       </div>
                     </div>
