@@ -25,9 +25,15 @@ const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
       // Synchronously create the directory 'api/uploads', if it doesn't exist
-      const createDirIfNotExists = (dir) =>
-        !existsSync(dir) ? mkdirSync(dir) : undefined;
-      createDirIfNotExists("api/uploads");
+      "api/uploads".split("/").reduce((directories, directory) => {
+        directories += `${directory}/`;
+
+        if (!fs.existsSync(directories)) {
+          fs.mkdirSync(directories);
+        }
+
+        return directories;
+      }, "");
 
       cb(null, "api/uploads/");
     },
