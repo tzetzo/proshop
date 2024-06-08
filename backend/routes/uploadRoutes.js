@@ -2,7 +2,7 @@ import path from "path";
 import { Router } from "express";
 import multer from "multer";
 import sizeOf from "image-size";
-import fs, { existsSync, mkdirSync } from "fs";
+import fs from "fs";
 
 const router = Router();
 
@@ -25,15 +25,15 @@ const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
       // Synchronously create the directory 'api/uploads', if it doesn't exist
-      "api/uploads".split("/").reduce((directories, directory) => {
-        directories += `${directory}/`;
+      // "api/uploads".split("/").reduce((directories, directory) => {
+      //   directories += `${directory}/`;
 
-        if (!fs.existsSync(directories)) {
-          fs.mkdirSync(directories);
-        }
+      //   if (!fs.existsSync(directories)) {
+      //     fs.mkdirSync(directories);
+      //   }
 
-        return directories;
-      }, "");
+      //   return directories;
+      // }, "");
 
       cb(null, "api/uploads/");
     },
