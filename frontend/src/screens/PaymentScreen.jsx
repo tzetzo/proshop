@@ -11,12 +11,14 @@ const PaymentScreen = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { cartItems, shippingAddress, paymentMethod } = useSelector(({ cart }) => cart);
+  const { cartItems, shippingAddress, paymentMethod } = useSelector(
+    ({ cart }) => cart,
+  );
 
   useEffect(() => {
     // redirect to '/' if cart is empty
     if (cartItems.length === 0) navigate("/");
-    
+
     // redirect to shipping if its not provided yet
     if (!shippingAddress.postalCode) {
       navigate("/shipping");

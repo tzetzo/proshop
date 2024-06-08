@@ -49,7 +49,7 @@ export const usersApi = api.injectEndpoints({
         method: "GET",
       }),
       keepUnusedDataFor: 5,
-      providesTags: ["getUserById"]
+      providesTags: ["getUserById"],
     }),
     updateUser: builder.mutation({
       query: ({ id, body }) => ({

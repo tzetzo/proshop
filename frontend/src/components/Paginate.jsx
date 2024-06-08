@@ -1,8 +1,7 @@
+import { Link } from "react-router-dom";
 import { Pagination } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
 
 const Paginate = ({ page, pages, isAdmin = false, searchTerm = "" }) => {
-
   const getLink = (pn) => {
     if (!isAdmin) {
       if (searchTerm) return `/searchTerm/${searchTerm}/page/${pn}`;
@@ -17,11 +16,14 @@ const Paginate = ({ page, pages, isAdmin = false, searchTerm = "" }) => {
   let paginationItems = [];
   for (let pageNumber = 1; pageNumber <= pages; pageNumber++) {
     paginationItems.push(
-      <LinkContainer key={pageNumber} to={getLink(pageNumber)}>
-        <Pagination.Item active={pageNumber === page}>
-          {pageNumber}
-        </Pagination.Item>
-      </LinkContainer>
+      <Pagination.Item
+        active={pageNumber === page}
+        as={Link}
+        key={pageNumber}
+        to={getLink(pageNumber)}
+      >
+        {pageNumber}
+      </Pagination.Item>,
     );
   }
 

@@ -29,7 +29,7 @@ const ProductScreen = () => {
   let { id } = useParams();
 
   const [qty, setQty] = useState(1);
-  const initialReview = { rating: 0, comment: "" }
+  const initialReview = { rating: 0, comment: "" };
   const [review, setReview] = useState(initialReview);
 
   const { userInfo } = useSelector(({ auth }) => auth);
@@ -55,11 +55,11 @@ const ProductScreen = () => {
     try {
       const res = await createProductReview({ id, body: review }).unwrap();
       refetchProduct();
-      toast.success('Review submitted');
+      toast.success("Review submitted");
       setReview(initialReview);
     } catch (err) {
       err.data.message && toast.error(err?.data?.message || err.error);
-      err.data.errors && err.data.errors.map(error => toast.error(error.msg));
+      err.data.errors && err.data.errors.map((error) => toast.error(error.msg));
     }
   };
 
@@ -135,7 +135,7 @@ const ProductScreen = () => {
                                 <option key={index} value={index + 1}>
                                   {index + 1}
                                 </option>
-                              )
+                              ),
                             )}
                           </Form.Select>
                         </Col>

@@ -6,13 +6,13 @@ import {
   Route,
   RouterProvider,
 } from "react-router-dom";
-import { HelmetProvider } from 'react-helmet-async';
+import { HelmetProvider } from "react-helmet-async";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 import { Provider } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 // import './assets/styles/bootstrap.custom.css';
-import './assets/styles/index.css';
+import "./assets/styles/index.css";
 
 import { store } from "./store";
 import App from "./App";
@@ -42,7 +42,10 @@ const router = createBrowserRouter(
       <Route index={true} path="/" element={<HomeScreen />} />
       <Route path="/page/:page" element={<HomeScreen />} />
       <Route path="/searchTerm/:searchTerm" element={<HomeScreen />} />
-      <Route path="/searchTerm/:searchTerm/page/:page" element={<HomeScreen />} />
+      <Route
+        path="/searchTerm/:searchTerm/page/:page"
+        element={<HomeScreen />}
+      />
       <Route path="/product/:id" element={<ProductScreen />} />
       <Route path="/cart" element={<CartScreen />} />
       <Route path="/login" element={<LoginScreen />} />
@@ -61,15 +64,27 @@ const router = createBrowserRouter(
       <Route to="" element={<AdminRoute />}>
         <Route path="/admin/orderlist" element={<OrderListScreen />} />
         <Route path="/admin/productlist" element={<ProductListScreen />} />
-        <Route path="/admin/productlist/page/:page" element={<ProductListScreen />} />
-        <Route path="/admin/productlist/searchTerm/:searchTerm" element={<ProductListScreen />} />
-        <Route path="/admin/productlist/searchTerm/:searchTerm/page/:page" element={<ProductListScreen />} />
-        <Route path="/admin/product/:id/update" element={<ProductUpdateScreen />} />
+        <Route
+          path="/admin/productlist/page/:page"
+          element={<ProductListScreen />}
+        />
+        <Route
+          path="/admin/productlist/searchTerm/:searchTerm"
+          element={<ProductListScreen />}
+        />
+        <Route
+          path="/admin/productlist/searchTerm/:searchTerm/page/:page"
+          element={<ProductListScreen />}
+        />
+        <Route
+          path="/admin/product/:id/update"
+          element={<ProductUpdateScreen />}
+        />
         <Route path="/admin/userlist" element={<UserListScreen />} />
         <Route path="/admin/user/:id/update" element={<UserUpdateScreen />} />
       </Route>
-    </Route>
-  )
+    </Route>,
+  ),
 );
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -82,7 +97,7 @@ root.render(
         </PayPalScriptProvider>
       </Provider>
     </HelmetProvider>
-  </React.StrictMode>
+  </React.StrictMode>,
 );
 
 // If you want to start measuring performance in your app, pass a function

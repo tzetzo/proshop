@@ -1,5 +1,5 @@
 import { Nav } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 
 const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
   const steps = [
@@ -14,9 +14,9 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
       {steps.map((step) => (
         <Nav.Item key={step.text}>
           {step.enabled ? (
-            <LinkContainer to={step.link}>
-              <Nav.Link>{step.text}</Nav.Link>
-            </LinkContainer>
+            <Nav.Link as={Link} to={step.link}>
+              {step.text}
+            </Nav.Link>
           ) : (
             <Nav.Link disabled>{step.text}</Nav.Link>
           )}

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 import { Button, Modal, Table } from "react-bootstrap";
 import { FaTimes, FaTrash, FaEdit, FaCheck } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -74,11 +74,14 @@ const UserListScreen = () => {
                 <td>{user.createdAt}</td>
                 <td>{user.updatedAt}</td>
                 <td>
-                  <LinkContainer to={`/admin/user/${user._id}/update`}>
-                    <Button variant="light" className="btn-sm">
-                      <FaEdit />
-                    </Button>
-                  </LinkContainer>
+                  <Button
+                    variant="light"
+                    className="btn-sm"
+                    as={Link}
+                    to={`/admin/user/${user._id}/update`}
+                  >
+                    <FaEdit />
+                  </Button>
                   <Button
                     variant="danger"
                     className="btn-sm"

@@ -5,7 +5,11 @@ import Message from "../../components/Message";
 import Loader from "../../components/Loader";
 import FormContainer from "../../components/FormContainer";
 import { toast } from "react-toastify";
-import { useGetProductQuery, useUpdateProductMutation, useUploadImageMutation } from "../../store";
+import {
+  useGetProductQuery,
+  useUpdateProductMutation,
+  useUploadImageMutation,
+} from "../../store";
 
 const ProductUpdateScreen = () => {
   const navigate = useNavigate();
@@ -15,7 +19,8 @@ const ProductUpdateScreen = () => {
   const [updateProduct, { isLoading: loadingUpdateProduct }] =
     useUpdateProductMutation();
 
-  const [uploadImage, { isLoading: loadingUploadImage }] = useUploadImageMutation(); 
+  const [uploadImage, { isLoading: loadingUploadImage }] =
+    useUploadImageMutation();
 
   const { id } = useParams();
   const {
@@ -38,16 +43,16 @@ const ProductUpdateScreen = () => {
   };
 
   const uploadImageHandler = async (e) => {
-    const formData= new FormData();
+    const formData = new FormData();
     formData.append("image", e.target.files[0]);
     try {
       const res = await uploadImage(formData).unwrap();
       toast.success(res.message);
       setState({ ...state, image: res.image });
     } catch (err) {
-      toast.error(err?.data?.message || err.error)
+      toast.error(err?.data?.message || err.error);
     }
-  }
+  };
 
   return (
     <>
@@ -61,7 +66,9 @@ const ProductUpdateScreen = () => {
         {loadingProduct ? (
           <Loader />
         ) : error ? (
-          <Message variant="danger">{error.data?.message || error.error}</Message>
+          <Message variant="danger">
+            {error.data?.message || error.error}
+          </Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">

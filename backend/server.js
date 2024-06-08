@@ -34,7 +34,7 @@ app.get("/api/config/paypal", (req, res) =>
 );
 app.use("/api/upload", uploadRoutes);
 
-app.use('/uploads', express.static(path.join(path.resolve(), '/uploads')));
+app.use('/api/uploads', express.static(path.join(path.resolve(), '/api/uploads')));
 
 // production/ci version
 if (["production", "ci"].includes(process.env.NODE_ENV)) {

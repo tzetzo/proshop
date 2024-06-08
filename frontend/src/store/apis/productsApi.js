@@ -60,7 +60,7 @@ export const productsApi = api.injectEndpoints({
     getTopProducts: builder.query({
       query: () => ({
         url: `${PRODUCTS_URL}/top`,
-        method: "GET"
+        method: "GET",
       }),
       keepUnusedDataFor: 5,
     }),

@@ -19,7 +19,7 @@ const CartScreen = () => {
   const navigate = useNavigate();
   const { cartItems } = useSelector(({ cart: cartItems }) => cartItems);
 
-  const checkoutHandler = () => navigate('/login?redirect=/shipping');
+  const checkoutHandler = () => navigate("/login?redirect=/shipping");
 
   return (
     <Row>
@@ -46,7 +46,7 @@ const CartScreen = () => {
                       value={item.qty}
                       onChange={(e) =>
                         dispatch(
-                          addToCart({ ...item, qty: Number(e.target.value) })
+                          addToCart({ ...item, qty: Number(e.target.value) }),
                         )
                       }
                     >
@@ -58,7 +58,11 @@ const CartScreen = () => {
                     </Form.Select>
                   </Col>
                   <Col md={2}>
-                    <Button type="button" variant="light" onClick={() => dispatch(removeFromCart(item._id))}>
+                    <Button
+                      type="button"
+                      variant="light"
+                      onClick={() => dispatch(removeFromCart(item._id))}
+                    >
                       <FaTrash />
                     </Button>
                   </Col>

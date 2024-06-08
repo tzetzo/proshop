@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Table, Form, Button, Col, Row, Modal } from "react-bootstrap";
-import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { FaTimes, FaTrash } from "react-icons/fa";
@@ -27,7 +27,12 @@ const ProfileScreen = () => {
   const [updateUserProfile, { isLoading: loadingUpdateUserProfile }] =
     useProfileMutation();
 
-  const { data: myOrders, isLoading, error, refetch: refetchMyOrders } = useGetMyOrdersQuery();
+  const {
+    data: myOrders,
+    isLoading,
+    error,
+    refetch: refetchMyOrders,
+  } = useGetMyOrdersQuery();
 
   const { userInfo } = useSelector(({ auth }) => auth);
 
@@ -165,11 +170,14 @@ const ProfileScreen = () => {
                       )}
                     </td>
                     <td>
-                      <LinkContainer to={`/order/${order._id}`}>
-                        <Button className="btn-sm" variant="light">
-                          Details
-                        </Button>
-                      </LinkContainer>
+                      <Button
+                        className="btn-sm"
+                        variant="light"
+                        as={Link}
+                        to={`/order/${order._id}`}
+                      >
+                        Details
+                      </Button>
                     </td>
                     <td>
                       <Button

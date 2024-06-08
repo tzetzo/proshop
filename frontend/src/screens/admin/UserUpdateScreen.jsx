@@ -16,11 +16,7 @@ const UserUpdateScreen = () => {
     useUpdateUserMutation();
 
   const { id } = useParams();
-  const {
-    data: user,
-    isLoading: loadingUser,
-    error,
-  } = useGetUserByIdQuery(id);
+  const { data: user, isLoading: loadingUser, error } = useGetUserByIdQuery(id);
 
   useEffect(() => user && setState(user), [user]);
 
@@ -31,7 +27,7 @@ const UserUpdateScreen = () => {
       // this handles the case when admin user is attempted for deletion(backend doesnt allow it and returns error)
       if (res.error) return toast.error(res.error.data.errors[0].msg);
       toast.success("User updated");
-      setState({})
+      setState({});
       navigate("/admin/userlist");
     } catch (err) {
       toast.error(err?.data?.message || err.error);
@@ -50,7 +46,9 @@ const UserUpdateScreen = () => {
         {loadingUser ? (
           <Loader />
         ) : error ? (
-          <Message variant="danger">{error.data?.message || error.error}</Message>
+          <Message variant="danger">
+            {error.data?.message || error.error}
+          </Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">
@@ -78,10 +76,12 @@ const UserUpdateScreen = () => {
                 type="switch"
                 label="Is Admin"
                 checked={state.isAdmin}
-                onChange={(e) => setState({ ...state, isAdmin: e.target.checked })}
+                onChange={(e) =>
+                  setState({ ...state, isAdmin: e.target.checked })
+                }
               />
             </Form.Group>
-            
+
             <Button type="submit" variant="primary" className="my-2">
               Update
             </Button>

@@ -71,10 +71,10 @@ const OrderScreen = () => {
     if (expireAt && !isPaid) {
       interval = setInterval(() => {
         const minutes = Math.floor(
-          (new Date(expireAt) - Date.now()) / 1000 / 60
+          (new Date(expireAt) - Date.now()) / 1000 / 60,
         );
         const seconds = Math.floor(
-          ((new Date(expireAt) - Date.now()) / 1000) % 60
+          ((new Date(expireAt) - Date.now()) / 1000) % 60,
         );
 
         setTimeLeftToPay({
@@ -88,7 +88,7 @@ const OrderScreen = () => {
       }, 1000);
     }
 
-    if(isPaid) {
+    if (isPaid) {
       clearInterval(interval);
       setTimeLeftToPay({
         minutes: -10,
@@ -190,7 +190,7 @@ const OrderScreen = () => {
       <h1>Order {_id}</h1>
 
       <Message>
-        {(timeLeftToPay.minutes === -10 && !isPaid) ? (
+        {timeLeftToPay.minutes === -10 && !isPaid ? (
           <Row>
             <Col>Estimating time...</Col>
           </Row>

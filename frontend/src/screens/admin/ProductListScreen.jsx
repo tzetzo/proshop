@@ -1,13 +1,5 @@
 import { useEffect, useState } from "react";
-import { LinkContainer } from "react-router-bootstrap";
-import {
-  Button,
-  Form,
-  Modal,
-  Table,
-  Row,
-  Col,
-} from "react-bootstrap";
+import { Button, Form, Modal, Table, Row, Col } from "react-bootstrap";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 import { Link, useNavigate, useParams } from "react-router-dom";
@@ -76,11 +68,11 @@ const ProductListScreen = () => {
 
   return (
     <>
-      {
-        searchTerm && (
-          <Link to='/admin/productlist/' className='btn btn-light mb-4'>Go back</Link>
-        )
-      }
+      {searchTerm && (
+        <Link to="/admin/productlist/" className="btn btn-light mb-4">
+          Go back
+        </Link>
+      )}
       <Row className="align-items-center">
         <Col>
           <h1>Products</h1>
@@ -122,11 +114,14 @@ const ProductListScreen = () => {
                   <td>{product.category}</td>
                   <td>{product.brand}</td>
                   <td>
-                    <LinkContainer to={`/admin/product/${product._id}/update`}>
-                      <Button variant="light" className="btn-sm mx-2">
-                        <FaEdit />
-                      </Button>
-                    </LinkContainer>
+                    <Button
+                      variant="light"
+                      className="btn-sm mx-2"
+                      as={Link}
+                      to={`/admin/product/${product._id}/update`}
+                    >
+                      <FaEdit />
+                    </Button>
                     <Button
                       variant="danger"
                       className="btn-sm"
@@ -145,7 +140,12 @@ const ProductListScreen = () => {
           </Table>
           <Row>
             <Col>
-              <Paginate page={data.page} pages={data.pages} isAdmin searchTerm={searchTerm} />
+              <Paginate
+                page={data.page}
+                pages={data.pages}
+                isAdmin
+                searchTerm={searchTerm}
+              />
             </Col>
             <Col className="text-end" md={1}>
               <Form.Select

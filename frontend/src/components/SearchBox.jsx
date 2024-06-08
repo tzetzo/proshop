@@ -10,7 +10,7 @@ const SearchBox = () => {
 
   const submitHandler = (e) => {
     e.preventDefault();
-  
+
     if (searchTerm.trim()) {
       if (!pathname.includes("admin")) {
         navigate(`/searchTerm/${searchTerm}`);

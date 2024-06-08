@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LinkContainer } from "react-router-bootstrap";
+import { Link } from "react-router-dom";
 import { Button, Modal, Table } from "react-bootstrap";
 import { FaTimes, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -12,7 +12,12 @@ const OrderListScreen = () => {
   const [toggleDeleteModal, setToggleDeleteModal] = useState(false);
   const [idToDelete, setIdtoDelete] = useState("");
 
-  const { data: allOrders, isLoading, error, refetch: refetchAllOrders } = useGetAllOrdersQuery();
+  const {
+    data: allOrders,
+    isLoading,
+    error,
+    refetch: refetchAllOrders,
+  } = useGetAllOrdersQuery();
 
   const [deleteOrder, { isLoading: loadingDeleteOrder }] =
     useDeleteOrderMutation();
@@ -71,11 +76,14 @@ const OrderListScreen = () => {
                   )}
                 </td>
                 <td>
-                  <LinkContainer to={`/order/${order._id}`}>
-                    <Button variant="light" className="btn-sm">
-                      Details
-                    </Button>
-                  </LinkContainer>
+                  <Button
+                    variant="light"
+                    className="btn-sm"
+                    as={Link}
+                    to={`/order/${order._id}`}
+                  >
+                    Details
+                  </Button>
                 </td>
                 <td>
                   <Button
