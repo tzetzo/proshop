@@ -2,7 +2,7 @@ import path from "path";
 import { Router } from "express";
 import multer from "multer";
 import sizeOf from "image-size";
-import fs from "fs";
+import fs, { existsSync, mkdirSync } from "fs";
 
 const router = Router();
 
@@ -24,6 +24,11 @@ function fileFilter(req, file, cb) {
 const upload = multer({
   storage: multer.diskStorage({
     destination(req, file, cb) {
+      // Synchronously create the directory 'api/uploads', if it doesn't exist
+      const createDirIfNotExists = (dir) =>
+        !existsSync(dir) ? mkdirSync(dir) : undefined;
+      createDirIfNotExists("api/uploads");
+
       cb(null, "api/uploads/");
     },
     filename(req, file, cb) {
