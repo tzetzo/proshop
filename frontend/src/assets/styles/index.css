@@ -9,3 +9,11 @@
 .carousel-item {
     background: rgb(95, 88, 88);
 }
+
+.notfound {
+    height: 75vh;
+    display: flex;
+    align-content: stretch;
+    justify-content: center;
+    align-items: center;
+}

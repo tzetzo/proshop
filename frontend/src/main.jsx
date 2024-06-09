@@ -18,6 +18,7 @@ import { store } from "./store";
 import App from "./App";
 import PrivateRoute from "./components/PrivateRoute";
 import AdminRoute from "./components/AdminRoute";
+import NotFound from "./components/NotFound";
 import LoginScreen from "./screens/LoginScreen";
 import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screens/HomeScreen";
@@ -83,6 +84,8 @@ const router = createBrowserRouter(
         <Route path="/admin/userlist" element={<UserListScreen />} />
         <Route path="/admin/user/:id/update" element={<UserUpdateScreen />} />
       </Route>
+
+      <Route path="*" element={<NotFound />} />
     </Route>,
   ),
 );
